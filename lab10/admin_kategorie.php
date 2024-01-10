@@ -24,7 +24,68 @@ function FormularzLogowania()
 }
 
 // Funkcja rekurencyjnie wyświetlająca kategorie w postaci tabeli HTML
-function PokazKategorie($matka = 0, $poziom = 0)
+function PokazKategorie()
+{
+    echo '
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Szczegóły kategorii</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>nazwa</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+    $matka = 0;
+    $poziom = 0;
+    $conn = connect();
+    $query = "SELECT id, matka, nazwa FROM kategorie WHERE matka = ? ORDER BY id ASC LIMIT 100";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $matka);
+    $stmt->execute();
+    $stmt->bind_result($id, $matka, $nazwa);
+    while ($stmt->fetch()) {
+
+        echo '
+            <form method="POST">
+                <tr>
+                    <td>' . $id . '</td>
+                    <td>' . $nazwa . '</td>
+                    <td>
+                        <input type="hidden" name="id" value="' . $id . '">
+                        <input type="submit" name="update" value="edytuj" class="btn btn-success btn-sm"> 
+                        <input type="submit" name="delete" value="usuń" class="btn btn-danger btn-sm">
+                    </td>
+                </tr>
+            </form>
+        ';
+
+        // Rekurencyjnie wywołaj funkcję dla podkategorii
+        PokazPodKategorie($id, $poziom + 1);
+    }
+
+    echo '
+                            </tbody>
+                        </table>
+                        <form method="post">
+                            <label for="add">Dodaj nową kategorię:</label>
+                            <input type="submit" name="add" value="dodaj" class="btn btn-primary btn-sm">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+    $conn->close();
+}
+function PokazPodKategorie($matka = 0, $poziom = 0)
 {
     $conn = connect();
     $query = "SELECT id, matka, nazwa FROM kategorie WHERE matka = ? ORDER BY id ASC LIMIT 100";
@@ -38,28 +99,23 @@ function PokazKategorie($matka = 0, $poziom = 0)
         $wciecie = str_repeat('&nbsp;', $poziom * 4);
 
         echo '
-        <table>
-            <tr>
-                <td>'. $wciecie .' </td>
-                <td>' . $id . '</td>
-                <td>' . $nazwa . '</td>
-                <td>
-                    <form method="post">
+            <form method="POST">
+                <tr>
+                    <td>'. $wciecie . $id . '</td>
+                    <td>' . $nazwa . '</td>
+                    <td>
                         <input type="hidden" name="id" value="' . $id . '">
-                        <input type="submit" name="update" value="edytuj"> 
-                        <input type="submit" name="delete" value="usuń">
-                    </form>
-                </td>
-            </tr>
-        </table>';
+                        <input type="submit" name="update" value="edytuj" class="btn btn-success btn-sm"> 
+                        <input type="submit" name="delete" value="usuń" class="btn btn-danger btn-sm">
+                    </td>
+                </tr>
+            </form>
+        ';
 
         // Rekurencyjnie wywołaj funkcję dla podkategorii
-        PokazKategorie($id, $poziom + 1);
+        PokazPodKategorie($id, $poziom + 1);
     }
-
-    $conn->close();
 }
-
 // Funkcja generująca formularz edycji kategorii w postaci tabeli HTML
 function EdytujKategorie($id)
 {
@@ -69,23 +125,42 @@ function EdytujKategorie($id)
     $stmt->execute();
     $stmt->bind_result($matka, $nazwa, $status);
     $stmt->fetch();
+
     echo '
-    <table>
-        <tr>
-            <td>
-                <form method="POST">
-                    <input type="hidden" name="update_id" value="' . $id . '">
-                    <label for="update_matka">Matka:</label>
-                    <input type="text" id="update_matka" name="update_matka" value="' . $matka . '">
-                    <label for="update_nazwa">Nazwa:</label>
-                    <textarea id="update_nazwa" name="update_nazwa">' . htmlspecialchars($nazwa). '</textarea>
-                    <label for="update_status">Czy aktywna:</label>
-                    <input type="checkbox" id="update_status" name="update_status" ' . ($status ? 'checked' : '') . ' > 
-                    <input type="submit" name="submit_update" value="potwierdź">       
-                </form>
-            </td>
-        </tr>
-    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Edytuj kategorię</h4>
+                        <form action="" method="post">
+                            <input type="submit" name="close_form" value="zamknij" class="btn btn-danger btn-sm">
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            <input type="hidden" name="update_id" value="' . $id . '">
+                            <div class="mb-3">
+                                <label for="update_matka">Matka:</label>
+                                <input type="text" id="update_matka" name="update_matka" value="' . $matka . '"> 
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_nazwa">Nazwa:</label>
+                                <textarea id="update_nazwa" name="update_nazwa">' . htmlspecialchars($nazwa). '</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="update_status">Czy aktywna:</label>
+                                <input type="checkbox" id="update_status" name="update_status" ' . ($status ? 'checked' : '') . ' > 
+                            </div>    
+                            <div class="mb-3">
+                                <input type="submit" name="submit_update" value="potwierdź" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     ';
     $conn->close();
 }
@@ -94,21 +169,40 @@ function EdytujKategorie($id)
 function DodajKategorie()
 {
     echo '
-    <table>
-        <tr>
-            <td>
-                <form action="" method="post">
-                    <label for="add_matka">Matka:</label>
-                    <input type="text" id="add_matka" name="add_matka">
-                    <label for="add_nazwa">Nazwa:</label>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Dodaj kategorię</h4>
+                        <form action="" method="post">
+                            <input type="submit" name="close_form" value="zamknij" class="btn btn-danger btn-sm">
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+    
+                            <div class="mb-3">
+                                <label for="add_matka">Matka:</label>
+                                <input type="text" id="add_matka" name="add_matka">
+                            </div>
+                            <div class="mb-3">
+                                <label for="add_nazwa">Nazwa:</label>
                     <textarea id="add_nazwa" name="add_nazwa"></textarea>
-                    <label for="add_status">Czy aktywna:</label>
-                    <input type="checkbox" id="add_status" name="add_status"> 
-                    <input type="submit" name="submit_add" value="potwierdź">
-                </form>
-            </td>
-        </tr>
-    </table>
+                            </div>
+                            <div class="mb-3">
+                                <label for="add_status">Czy aktywna:</label>
+                                <input type="checkbox" id="add_status" name="add_status"> 
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" name="submit_add" class="btn btn-primary">potwierdź</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     ';
 }
 
@@ -165,6 +259,12 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="pl" />
     <meta name="Author" content="Szymon Bieniaszewski" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <title>CMS</title>
 </head>
 <body>
@@ -172,12 +272,6 @@ if (!isset($_SESSION['loggedin']) || !$_SESSION['loggedin']) {
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
     // Wyświetlanie kategorii dla zalogowanego użytkownika
     PokazKategorie();
-    echo '
-    <form method="post">
-    <label for="add">Dodaj nową kategorię:</label>
-    <input type="submit" name="add" value="dodaj">
-    </form>
-    ';
 
     // Wywołanie funkcji DodajKategorie po naciśnięciu przycisku "Dodaj"
     if (isset($_POST['add'])) {

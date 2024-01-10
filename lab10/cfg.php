@@ -1,26 +1,27 @@
 <?php
-
-// Ustawienie globalnych zmiennych dla loginu i hasła
-$GLOBALS['login'] = 'a';
+// Ustawienie globalnych zmiennych przechowujących dane do logowania
+$GLOBALS['login'] = 'a@a';
 $GLOBALS['pass'] = 'a';
 
-// Funkcja nawiązująca połączenie z bazą danych.
+// Funkcja łącząca się z bazą danych
 function connect()
 {
-    // Dane dostępowe do bazy danych
+    // Dane do połączenia z bazą danych
     $hostname = "localhost";
     $username = "root";
     $password = "";
     $dbname = "moja_strona164454";
 
-    // Nawiązanie połączenia z bazą danych
+    // Utworzenie połączenia z bazą danych
     $conn = mysqli_connect($hostname, $username, $password, $dbname);
 
-    // Sprawdzenie poprawności połączenia
+    // Sprawdzenie, czy połączenie zostało poprawnie nawiązane
     if (!$conn) {
+        // Zakończenie działania skryptu i wyświetlenie błędu w przypadku nieudanego połączenia
         die("Connection failed!" . mysqli_connect_error());
     }
 
+    // Zwrócenie obiektu reprezentującego połączenie z bazą danych
     return $conn;
 }
 ?>

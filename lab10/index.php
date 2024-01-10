@@ -1,25 +1,23 @@
 <?php
-
-// Wyłączenie raportowania błędów związanych z noticami i warningami
+// Wyłączenie raportowania błędów związanego z noticami i warningami
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 
-// Import plików konfiguracyjnego i funkcji wyświetlającej podstronę
+// Dołączenie plików konfiguracyjnego i funkcji do wyświetlania podstrony
 include('cfg.php');
 include('showpage.php');
 
 // Nawiązanie połączenia z bazą danych
 $conn = connect();
 
-// Dynamiczne ładowanie stron na podstawie parametru GET 'idp'
+// Wybór podstrony na podstawie parametru 'idp' z URL
 if ($_GET['idp'] == '') $strona = PokazPodstrone(1, $conn);
-elseif ($_GET['idp'] == 'ciekawostki') $strona = PokazPodstrone(3, $conn);
-elseif ($_GET['idp'] == 'komputer_analogowy') $strona = PokazPodstrone(4, $conn);
-elseif ($_GET['idp'] == 'komputer_cyfrowy') $strona = PokazPodstrone(5, $conn);
-elseif ($_GET['idp'] == 'komputer_elektromechaniczny') $strona = PokazPodstrone(6, $conn);
-elseif ($_GET['idp'] == 'kontakt') $strona = PokazPodstrone(7, $conn);
-elseif ($_GET['idp'] == 'pierwszy_komputer') $strona = PokazPodstrone(8, $conn);
-elseif ($_GET['idp'] == 'filmy') $strona = PokazPodstrone(2, $conn);
-
+if ($_GET['idp'] == 'ciekawostki') $strona = PokazPodstrone(3, $conn);
+if ($_GET['idp'] == 'komputer_analogowy') $strona = PokazPodstrone(4, $conn);
+if ($_GET['idp'] == 'komputer_cyfrowy') $strona = PokazPodstrone(5, $conn);
+if ($_GET['idp'] == 'komputer_elektromechaniczny') $strona = PokazPodstrone(6, $conn);
+if ($_GET['idp'] == 'kontakt') $strona = PokazPodstrone(7, $conn);
+if ($_GET['idp'] == 'pierwszy_komputer') $strona = PokazPodstrone(8, $conn);
+if ($_GET['idp'] == 'filmy') $strona = PokazPodstrone(2, $conn);
 ?>
 
 <!DOCTYPE html>
@@ -28,8 +26,9 @@ elseif ($_GET['idp'] == 'filmy') $strona = PokazPodstrone(2, $conn);
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="pl" />
     <meta name="Author" content="Szymon Bieniaszewski" />
-    <script src="js/kolorujtlo.js"></script>
+    <script src="js/kolorujtlo.js" type="text/javascript"> </script>
     <script src="js/timedate.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
     <title>Komputer moją pasją</title>
 </head>
@@ -53,15 +52,15 @@ elseif ($_GET['idp'] == 'filmy') $strona = PokazPodstrone(2, $conn);
 </div>
 
 <?php
-// wyświetlanie strony którą wybrał użytkownik
+// Wyświetlenie zawartości podstrony
 echo $strona;
 ?>
 
 <?php
-// Dodatkowe informacje na dole strony
+// Informacje o autorze
 $nr_indeksu = '164454';
 $nrGrupy = '1';
-echo 'Autor: Szymon Bieniaszewski ' . $nr_indeksu . ' grupa ' . $nrGrupy . '<br><br/>';
+echo 'Autor: Szymon Bieniaszewski '.$nr_indeksu.' grupa '.$nrGrupy.'<br><br/>';
 ?>
 </body>
 </html>
