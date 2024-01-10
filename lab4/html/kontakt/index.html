@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Language" content="pl" />
+<meta name="Author" content="Szymon Bieniaszewski" />
+<title>Komputer moją pasją</title>
+<link rel="stylesheet" href="../../css/style.css">
+<style>
+  body {
+    background-image: url('../../img/flat-lay-workstation-with-copy-space-laptop.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+</style>
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="../../index.html">Home</a>
+    <a href="../ciekawostki/index.html">Ciekawostki</a>
+    <div class="dropdown">
+      <button class="dropbtn">Historia
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="../pierwszy_komputer/index.html">pierwszy komputer</a>
+        <a href="../komputer_elektromechaniczny/index.html">elektromechaniczna maszyna licząca</a>
+        <a href="../komputer_analogowy/index.html">komputer analogowy</a>
+        <a href="../komputer_cyfrowy/index.html">komputer cyfrowy</a>
+      </div>
+    </div> 
+    <a href="#">kontakt</a>
+  </div>
+  <div class="page-container">
+    <header>
+      <h1>Kontakt</h1>
+    </header>
+    <div class="kontakt">
+      <div class="zakladki">
+        <h2>Potrzebujesz się skontaktować? Wypełni poniższy formularz</h2>
+          <label for="btn-wiadomosc">
+              <input type="radio" id="btn-wiadomosc" name="zakladka" checked> Wiadomość
+          </label>
+          <label for="btn-kontakt">
+              <input type="radio" id="btn-kontakt" name="zakladka"> Kontakt
+          </label>
+      </div>
+      <div class="formularz">
+          <form id="formularz-wiadomosc">
+              <label for="imie">Imię:</label>
+              <input type="text" id="imie" name="imie" required><br>
+              <label for="email">E-mail:</label>
+              <input type="email" id="email" name="email" required><br>
+              <label for="wiadomosc">Treść wiadomości:</label>
+              <textarea id="wiadomosc" name="wiadomosc" rows="4" required></textarea><br>
+              <button type="submit">Wyślij</button>
+          </form>
+          <div id="kontakt-info" class="ukryj">
+              <p>Adres e-mail: <a href="mailto:kontakt@example.com">kontakt@example.com</a></p>
+          </div>
+      </div>
+    </div>
+  </div>
+</body>
